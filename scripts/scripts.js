@@ -15,13 +15,6 @@ import {
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
-// Side-effects
-(async function daPreview() {
-  const { searchParams } = new URL(window.location.href);
-  if (searchParams.get('dapreview') === 'on') import('https://da.live/scripts/dapreview.js');
-}());
-
-
 /**
  * Builds hero block and prepends to main in a new section.
  * @param {Element} main The container element
@@ -138,5 +131,14 @@ async function loadPage() {
   await loadLazy(document);
   loadDelayed();
 }
+
+// Side-effects
+(async function daPreview() {
+  const { searchParams } = new URL(window.location.href);
+  if (searchParams.get('dapreview') === 'on') {
+    const { default: livePreview } = await import('https://central-da-preview--da-live--adobe.hlx.live/scripts/dapreview.js');
+    livePreview(loadPage);
+  }
+}());
 
 loadPage();
