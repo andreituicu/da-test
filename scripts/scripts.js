@@ -136,7 +136,7 @@ async function loadPage() {
 (async function daPreview() {
   const { searchParams } = new URL(window.location.href);
   if (searchParams.get('dapreview') === 'on') {
-    const { default: livePreview } = await import('https://central-da-preview--da-live--adobe.hlx.live/scripts/dapreview.js');
+    const { default: livePreview } = await import('https://central-preview-css--da-live--adobe.hlx.live/scripts/dapreview.js');
     livePreview(loadPage);
   }
 }());
