@@ -1,6 +1,6 @@
 export default function decorate(block) { 
   const anchor = document.createElement('a');
-  anchor.textContent('Click Me');
+  anchor.textContent = 'Click Me';
   anchor.classList.add('button');
   anchor.classList.add('primary');
   anchor.addEventListener('click', () => {
