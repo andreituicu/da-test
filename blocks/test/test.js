@@ -1,4 +1,5 @@
 export default function decorate(block) { 
+  block.innerHTML = '';
   const paragraph = document.createElement('p');
   paragraph.classList.add('button-container');
 
