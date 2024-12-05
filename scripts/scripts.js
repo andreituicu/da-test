@@ -133,12 +133,11 @@ async function loadPage() {
 }
 
 // Side-effects
-(async function daPreview() {
-  const { searchParams } = new URL(window.location.href);
-  if (searchParams.get('dapreview') === 'on') {
-    const { default: livePreview } = await import('https://central-preview-css--da-live--adobe.hlx.live/scripts/dapreview.js');
-    livePreview(loadPage);
-  }
+(async function loadDa() {
+  const daPreview = new URL(window.location.href).searchParams.get('dapreview');
+  if (!daPreview) return;
+  const origin = daPreview === 'local' ? 'http://localhost:3000' : 'https://da.live';
+  import(`${origin}/scripts/dapreview.js`).then(({ default: daPreview }) => daPreview(loadPage));
 }());
 
 loadPage();
