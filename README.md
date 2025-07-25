@@ -1,27 +1,24 @@
-# Block collection
+# AEM Block Collection
 
-This project contains code that is feature on the [AEM Block Collection](https://www.aem.live/developer/block-collection#block-collection-1) documentation.
+This project provides a foundation for starting an AEM Edge Delivery Services project. It includes many common blocks and features a project might need.
 
-## Environments
-- Preview: https://main--{repo}--{owner}.hlx.page/
-- Live: https://main--{repo}--{owner}.hlx.live/
+## DA compatible
 
-## Installation
+This specific repo has been _slightly_ modified to be compatible with DA's live preview.
 
-```sh
-npm i
-```
+## Getting started
 
-## Tests
+### 1. Github
+1. Use this template to make a new repo.
+1. Install [AEM Code Sync](https://github.com/apps/aem-code-sync).
 
-```sh
-npm tst
-```
+### 2. DA content
+1. Browse to https://da.live/start.
+2. Follow the steps.
 
-## Local development
-
-1. Create a new repository based on the `helix-project-boilerplate` template and add a mountpoint in the `fstab.yaml`
-1. Add the [helix-bot](https://github.com/apps/helix-bot) to the repository
-1. Install the [Helix CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/helix-cli`
-1. Start Helix Pages Proxy: `hlx up` (opens your browser at `http://localhost:3000`)
-1. Open the `{repo}` directory in your favorite IDE and start coding :)
+### 3. Local development
+1. Clone your new repo to your computer.
+1. Install the AEM CLI using your terminal: `sudo npm install -g @adobe/aem-cli`
+1. Start the AEM CLI: `aem up`.
+1. Open the `{repo}` folder in your favorite code editor and buil something.
+1. **Recommended:** Install common npm packages like linting and testing: `npm i`.

@@ -1,3 +1,4 @@
+import { fetchPlaceholders } from '../../scripts/aem.js';
 
 function updateActiveSlide(slide) {
   const block = slide.closest('.carousel');
@@ -27,7 +28,7 @@ function updateActiveSlide(slide) {
   });
 }
 
-function showSlide(block, slideIndex = 0) {
+export function showSlide(block, slideIndex = 0) {
   const slides = block.querySelectorAll('.carousel-slide');
   let realSlideIndex = slideIndex < 0 ? slides.length - 1 : slideIndex;
   if (slideIndex >= slides.length) realSlideIndex = 0;
@@ -95,7 +96,7 @@ export default async function decorate(block) {
   const rows = block.querySelectorAll(':scope > div');
   const isSingleSlide = rows.length < 2;
 
-  const placeholders = {};
+  const placeholders = await fetchPlaceholders();
 
   block.setAttribute('role', 'region');
   block.setAttribute('aria-roledescription', placeholders.carousel || 'Carousel');
