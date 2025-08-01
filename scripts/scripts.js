@@ -136,7 +136,7 @@ async function loadPage() {
 (async function loadDa() {
   const daPreview = new URL(window.location.href).searchParams.get('dapreview');
   if (!daPreview) return;
-  const origin = daPreview === 'local' ? 'http://localhost:3000' : 'https://da.live';
+  const origin = daPreview === 'local' ? 'http://localhost:3000' : 'https://lporg--da-live--adobe.aem.live';
   import(`${origin}/scripts/dapreview.js`).then(({ default: daPreview }) => daPreview(loadPage));
 }());
 
