@@ -132,12 +132,14 @@ async function loadPage() {
   loadDelayed();
 }
 
-// Side-effects
-(async function loadDa() {
-  const daPreview = new URL(window.location.href).searchParams.get('dapreview');
-  if (!daPreview) return;
-  const origin = daPreview === 'local' ? 'http://localhost:3000' : 'https://lporg--da-live--adobe.aem.live';
-  import(`${origin}/scripts/dapreview.js`).then(({ default: daPreview }) => daPreview(loadPage));
-}());
+(function da() {
+  const { searchParams } = new URL(window.location.href);
 
-loadPage();
+  const lp = searchParams.get('dapreview');
+  // eslint-disable-next-line import/no-unresolved
+  if (lp) import('https://da.live/scripts/dapreview.js').then((mod) => mod.default(loadPage));
+
+  const exp = searchParams.get('daexperiment');
+  // eslint-disable-next-line import/no-unresolved
+  if (exp) import('https://da.live/nx/public/plugins/exp/exp.js');
+}());
