@@ -126,7 +126,7 @@ function loadDelayed() {
   // load anything that can be postponed to the latest here
 }
 
-async function loadPage() {
+export async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();
@@ -142,6 +142,18 @@ async function loadPage() {
   const exp = searchParams.get('daexperiment');
   // eslint-disable-next-line import/no-unresolved
   if (exp) import('https://da.live/nx/public/plugins/exp/exp.js');
+
+  const hasQE = searchParams.has('quick-edit');
+  if (hasQE) import('../tools/quick-edit/quick-edit.js').then((mod) => mod.default());
+}());
+
+// Sidekick integration
+(async function loadSidekick() {
+  const getSk = () => document.querySelector('aem-sidekick');
+  const sk = getSk() || await new Promise((resolve) => {
+    document.addEventListener('sidekick-ready', () => resolve(getSk()));
+  });
+  if (sk) import('../tools/sidekick/sidekick.js').then((mod) => mod.default(sk));
 }());
 
 loadPage()
