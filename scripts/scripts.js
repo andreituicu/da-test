@@ -114,6 +114,9 @@ async function loadLazy(doc) {
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
+
+  // register custom Experience Governance preflight checks (window.qe.preflight)
+  import('./preflight.js').then((mod) => mod.default());
 }
 
 /**
