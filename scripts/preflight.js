@@ -96,9 +96,58 @@ function checkImagesHaveAlt() {
     };
 }
 
+// Verify headings descend in a logical, accessible order.
+function checkHeadingOrder() {
+  const id = 'heading-order';
+  const title = 'Headings are in a valid accessibility order';
+  const headings = [...document.querySelectorAll('main h1, main h2, main h3, main h4, main h5, main h6')];
+  if (headings.length === 0) {
+    return { id, title, alignment: 'NA', reasoning: 'No headings on the page.' };
+  }
+
+  const level = (h) => Number(h.tagName[1]);
+  const label = (h) => h.tagName.toLowerCase();
+  const text = (h) => (h.textContent || '').trim().slice(0, 40);
+  const problems = [];
+
+  // First heading must be H1.
+  if (level(headings[0]) !== 1) {
+    problems.push(`First heading is <${label(headings[0])}> ("${text(headings[0])}"); expected <h1>.`);
+  }
+
+  // No heading before the first H1.
+  const firstH1Index = headings.findIndex((h) => level(h) === 1);
+  if (firstH1Index > 0) {
+    problems.push(`${firstH1Index} heading(s) appear before the first <h1>.`);
+  }
+
+  // No skipped levels when descending.
+  let prev = level(headings[0]);
+  for (let i = 1; i < headings.length; i += 1) {
+    const cur = level(headings[i]);
+    if (cur > prev + 1) {
+      problems.push(`Heading level jumps from <h${prev}> to <${label(headings[i])}> ("${text(headings[i])}"); do not skip levels.`);
+    }
+    prev = cur;
+  }
+
+  // Dedupe (e.g. first-heading and before-h1 rules can overlap).
+  const unique = [...new Set(problems)];
+  return unique.length === 0
+    ? { id, title, alignment: 'YES', reasoning: `${headings.length} heading(s) in valid order.` }
+    : {
+      id,
+      title,
+      alignment: 'NO',
+      reasoning: unique.join('; '),
+      suggestions: 'Start with a single H1 and step heading levels by one when nesting; do not skip levels.',
+    };
+}
+
 export default function registerPreflightChecks() {
   window.qe = window.qe || {};
   window.qe.preflight = () => [
+    checkHeadingOrder(),
     checkAlwaysPass(),
     checkCardsStructure(),
     checkSingleH1(),
