@@ -1,6 +1,6 @@
 /**
  * Custom preflight checks consumed by the Experience Governance tool.
- * The crawler invokes window.qe.preflight() in the page runtime and merges
+ * The crawler invokes window.aem.preflight() in the page runtime and merges
  * the returned array of { alignment, id, title, reasoning, suggestions } checks.
  * alignment must be one of 'YES' (pass), 'NO' (fail) or 'NA' (not applicable).
  */
@@ -11,7 +11,7 @@ function checkAlwaysPass() {
     id: 'always-pass',
     title: 'Baseline preflight check',
     alignment: 'YES',
-    reasoning: 'Sentinel check confirming window.qe.preflight is wired up.',
+    reasoning: 'Sentinel check confirming window.aem.preflight is wired up.',
   };
 }
 
@@ -145,8 +145,8 @@ function checkHeadingOrder() {
 }
 
 export default function registerPreflightChecks() {
-  window.qe = window.qe || {};
-  window.qe.preflight = () => [
+  window.aem = window.aem || {};
+  window.aem.preflight = () => [
     checkHeadingOrder(),
     checkAlwaysPass(),
     checkCardsStructure(),
