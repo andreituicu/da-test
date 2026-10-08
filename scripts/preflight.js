@@ -89,12 +89,83 @@ function checkSingleH1() {
   });
 }
 
+// Verify the rendered (decorated) page has fewer than 20 blocks.
+function checkBlockCountRendered() {
+  const id = 'block-count-rendered';
+  const title = 'Fewer than 20 blocks on the rendered page';
+  const maxBlocks = 20;
+
+  const count = document.querySelectorAll('main .block').length;
+
+  if (count < maxBlocks) {
+    return new SiteCodeCheckResult({
+      id,
+      title,
+      alignment: Alignment.YES,
+      reasoning: `Found ${count} block(s) on the rendered page.`,
+    });
+  }
+  return new SiteCodeCheckResult({
+    id,
+    title,
+    alignment: Alignment.NO,
+    reasoning: `Found ${count} block(s) on the rendered page; expected fewer than ${maxBlocks}.`,
+    suggestions: 'Reduce the number of blocks on the page or split the content across pages.',
+  });
+}
+
+// Verify the page HTML (as served, before decoration) has fewer than 20 blocks.
+async function checkBlockCountMarkup() {
+  const id = 'block-count-markup';
+  const title = 'Fewer than 20 blocks in the page HTML';
+  const maxBlocks = 20;
+
+  let html;
+  try {
+    const url = new URL(window.location.href);
+    url.hash = '';
+    const resp = await fetch(url, { cache: 'no-store' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    html = await resp.text();
+  } catch (e) {
+    return new SiteCodeCheckResult({
+      id,
+      title,
+      alignment: Alignment.NO,
+      reasoning: `Could not fetch the page HTML: ${e.message}`,
+      suggestions: 'Make sure the page HTML is reachable.',
+    });
+  }
+
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  // In undecorated markup, blocks are classed divs directly inside section divs.
+  const count = doc.querySelectorAll('main > div > div[class]').length;
+
+  if (count < maxBlocks) {
+    return new SiteCodeCheckResult({
+      id,
+      title,
+      alignment: Alignment.YES,
+      reasoning: `Found ${count} block(s) in the page HTML.`,
+    });
+  }
+  return new SiteCodeCheckResult({
+    id,
+    title,
+    alignment: Alignment.NO,
+    reasoning: `Found ${count} block(s) in the page HTML; expected fewer than ${maxBlocks}.`,
+    suggestions: 'Reduce the number of blocks on the page or split the content across pages.',
+  });
+}
+
 export default function registerPreflightChecks() {
   window.aem = window.aem || {};
-  window.aem.preflight = () => [
+  window.aem.preflight = async () => [
     checkAlwaysPass(),
     checkAlwaysFail(),
     checkAlwaysNotApplicable(),
     checkSingleH1(),
+    checkBlockCountRendered(),
+    await checkBlockCountMarkup(),
   ];
 }
